@@ -9,7 +9,7 @@ const app = express();
 
 // app.use("/books", checkAuth);
 
-app.get("/books", checkAuth, async (req, res) => {
+app.get("/books", async (req, res) => {
   const filePath = path.join(__dirname, "books.json");
 
   try {
@@ -23,7 +23,7 @@ app.get("/books", checkAuth, async (req, res) => {
   }
 });
 
-app.post("/books", (req, res) => {
+app.post("/books", checkAuth, (req, res) => {
   res.send("Book created successfully");
 });
 
