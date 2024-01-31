@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat</title>
+</head>
+
+<body style="background-color: antiquewhite;">
+  <form id="form">
+    <div>
+      <input type="text" name="name" placeholder="Your name:" />
+    </div>
+    <div>
+      <input type="text" name="message" placeholder="Your message:" />
+    </div>
+    <button type="submit">Send</button>
+  </form>
+
+  <div id="message"></div>
+
+  <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"
+    integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4"
+    crossorigin="anonymous"></script>
+  <script>
+    const socket = io("http://localhost:8080");
+
+    const formElement = document.getElementById("form");
+    const messageElement = document.getElementById("message");
+
+    formElement.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const name = event.target.name.value.trim();
+      const message = event.target.message.value.trim();
+
+      if (name === "" || message === "") {
+        return;
+      }
+
+      socket.emit("chatMessage", JSON.stringify({ name, message }));
+
+      formElement.reset();
+    });
+
+    function writeLine(text) {
+      const line = document.createElement("p");
+      line.innerText = text;
+      messageElement.appendChild(line);
+    }
+
+    socket.on("chatMessage", message => {
+      writeLine(message);
+    })
+  </script>
+
+</body>
+
+</html>
